@@ -1,6 +1,15 @@
-# pyannote-rs
+# pyannote-rs — ScribeFlow patched fork
 
-[![Crates](https://img.shields.io/crates/v/pyannote-rs?logo=rust)](https://crates.io/crates/pyannote-rs/)
+> **This is a patched fork** of [`thewh1teagle/pyannote-rs`](https://github.com/thewh1teagle/pyannote-rs)
+> used by [ScribeFlow](https://github.com/knsl-io/scribeflow) as one of its
+> diarization backends. It combines two unmerged upstream PRs (#22 by
+> tmoroney, #28 by gregoire22enpc) with four ScribeFlow-specific patches
+> that target the v0.1.0 release segmentation/embedding ONNX models.
+> Patch list, diffs, and rationale: see [PATCHES.md](PATCHES.md).
+>
+> Revert to upstream `pyannote-rs` on crates.io once the relevant PRs land
+> upstream and ScribeFlow's required model schema is supported there.
+
 [![License](https://img.shields.io/github/license/thewh1teagle/pyannote-rs?color=00aaaa&logo=license)](https://github.com/thewh1teagle/pyannote-rs/blob/main/LICENSE)
 
 Pyannote audio diarization in Rust
