@@ -69,9 +69,10 @@ impl EmbeddingExtractor {
         ];
 
         let ort_outs = self.session.run(inputs)?;
-        let ort_out = ort_outs
-            .get("embeddings")
-            .context("Output tensor 'embeddings' not found")?
+        // Read the first (and only) output by position — WeSpeaker exports
+        // don't name it "embeddings", so a positional read is more robust to
+        // schema variants across the WeSpeaker model zoo.
+        let ort_out = ort_outs[0]
             .try_extract_tensor::<f32>()
             .context("Failed to extract tensor")?;
 
