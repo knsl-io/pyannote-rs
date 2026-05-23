@@ -61,8 +61,11 @@ impl EmbeddingExtractor {
             .as_slice_memory_order()
             .context("fbank features should be contiguous")?
             .to_vec();
+        // Use input name "feats" to match WeSpeaker ONNX exports (resnet34,
+        // CAM++) bundled with pyannote-rs v0.1.0. PR #22 hardcoded
+        // "fbank_features" which only matches the onnx-community export.
         let inputs = ort::inputs![
-            "fbank_features" => Tensor::from_array(([1usize, num_frames, num_bins], feature_values))?
+            "feats" => Tensor::from_array(([1usize, num_frames, num_bins], feature_values))?
         ];
 
         let ort_outs = self.session.run(inputs)?;
