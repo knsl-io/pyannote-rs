@@ -105,7 +105,9 @@ pub fn get_segments<P: AsRef<Path>>(
                 Err(e) => return Some(Err(eyre::eyre!("Failed to run the session: {:?}", e))),
             };
 
-            let ort_out = match ort_outs.get("logits").context("Output tensor not found") {
+            // Output name "output" matches the v0.1.0 segmentation-3.0.onnx;
+            // the onnx-community export names it "logits".
+            let ort_out = match ort_outs.get("output").context("Output tensor not found") {
                 Ok(output) => output,
                 Err(e) => return Some(Err(eyre::eyre!("Output tensor error: {:?}", e))),
             };
