@@ -93,8 +93,11 @@ pub fn get_segments<P: AsRef<Path>>(
                     return Some(Err(eyre::eyre!("Failed to prepare inputs: {:?}", e)));
                 }
             };
+            // Input name "input" matches segmentation-3.0.onnx bundled with
+            // pyannote-rs v0.1.0. PR #22's "input_values" targets the
+            // onnx-community export, which uses different I/O names.
             let inputs = ort::inputs![
-                "input_values" => tensor
+                "input" => tensor
             ];
 
             let ort_outs = match session.run(inputs) {
