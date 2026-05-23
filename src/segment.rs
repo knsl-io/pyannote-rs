@@ -74,7 +74,14 @@ pub fn get_segments<P: AsRef<Path>>(
             let end = start + window_size;
             let window = &padded_samples[start..end];
 
-            let window_f32 = window.iter().map(|&x| x as f32).collect::<Vec<_>>();
+            // Normalize i16 [-32768, 32767] to f32 [-1.0, 1.0]; the segmentation
+            // ONNX model expects normalized float samples. Per PR #28 by
+            // gregoire22enpc — without this, the model classifies everything
+            // as non-speech and the iterator emits zero segments.
+            let window_f32 = window
+                .iter()
+                .map(|&x| x as f32 / 32768.0)
+                .collect::<Vec<_>>();
 
             // Handle potential errors during the session and input processing
             let tensor = match TensorRef::from_array_view((
