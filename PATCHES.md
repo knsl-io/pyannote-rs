@@ -1,6 +1,24 @@
-# pyannote-rs — ScribeFlow Vendored Fork
+# pyannote-rs — ScribeFlow Patched Fork
 
-This directory holds a vendored, patched copy of [`pyannote-rs`](https://github.com/thewh1teagle/pyannote-rs) used by the `pyannote3-onnx` diarization backend in `scribeflow-transcriber-rs`. The upstream `0.3.4` crate (latest on crates.io as of 2026-05) does not produce any speech segments on standard PCM WAV input. This fork combines two unmerged upstream PRs and adds a few additional patches so the backend actually works against the model snapshots ScribeFlow ships in `scribeflow-transcriber-rs/models/`.
+This repository is a patched fork of [`thewh1teagle/pyannote-rs`](https://github.com/thewh1teagle/pyannote-rs) used by the `pyannote3-onnx` diarization backend in [ScribeFlow](https://github.com/knsl-io/scribeflow). The upstream `0.3.4` crate (latest on crates.io as of 2026-05) does not produce any speech segments on standard PCM WAV input. This fork combines two unmerged upstream PRs and adds a few additional patches so the backend works against the v0.1.0 release ONNX models.
+
+## Required models (download once)
+
+The patches in this fork target **a specific snapshot of the ONNX models** — the one bundled with the [pyannote-rs v0.1.0 GitHub release](https://github.com/thewh1teagle/pyannote-rs/releases/tag/v0.1.0). Other snapshots (e.g. [`onnx-community/pyannote-segmentation-3.0`](https://huggingface.co/onnx-community/pyannote-segmentation-3.0) on HuggingFace) name their tensors differently and **will fail with `Invalid input name` errors** against this fork — see the patch list below for the schema differences.
+
+```bash
+# Segmentation (pyannote 3.0; "input" / "output" tensor names)
+curl -L -o segmentation-3.0.onnx \
+  https://github.com/thewh1teagle/pyannote-rs/releases/download/v0.1.0/segmentation-3.0.onnx
+
+# Embedding (WeSpeaker CAM++; "feats" input, single positional output)
+curl -L -o wespeaker_en_voxceleb_CAM++.onnx \
+  https://github.com/thewh1teagle/pyannote-rs/releases/download/v0.1.0/wespeaker_en_voxceleb_CAM++.onnx
+```
+
+Sizes: segmentation ~6 MB, embedding ~28 MB.
+
+The original models are `pyannote/segmentation-3.0` and `pyannote/wespeaker-voxceleb-resnet34-LM` (CAM++ variant) from the HuggingFace Hub; the v0.1.0 release just bundles ONNX exports of those.
 
 ## How this fork was assembled
 
